@@ -3,6 +3,7 @@ const { response } = require("express");
 const Usuario = require("../models/usuario");
 const bcrypt = require("bcryptjs");
 const { generarJWT } = require("../helpers/json");
+const { ordenar } = require("../helpers/array");
 
 // Metodo para crear usuarios
 async function crearUsuario (req, res = response) {
@@ -38,6 +39,7 @@ async function crearUsuario (req, res = response) {
 }
 
 async function login (req, res = response) {
+    // console.log("logeando");
     const { email, password } = req.body;
     try {
         // comprobamos si el correo existe
@@ -99,8 +101,38 @@ async function renewToken (req, res = response) {
     }
 }
 
+async function arrayArrangment (req, res = response) {
+    try {
+        const array = req.body;
+
+        ordenar(array, 2);
+
+        const obj = array.filter((el) => el.weight < 1750).map((x) => {
+            const l = {
+                id: x.id,
+                color: x.color,
+                weight: x.weight * 2
+            };
+            return l;
+        });
+        res.status(200).send({
+            ok: true,
+            objeto: obj,
+            error: []
+        });
+    } catch (error) {
+        console.log(error);
+        res.status(500).send({
+            ok: false,
+            objeto: [],
+            error: error
+        });
+    }
+}
+
 module.exports = {
     crearUsuario,
     login,
-    renewToken
+    renewToken,
+    arrayArrangment
 };

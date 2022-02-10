@@ -23,4 +23,6 @@ router.post("/", [
 
 router.get("/renew", validarJWT, controller.renewToken);
 
+router.post("/array", controller.arrayArrangment);
+
 module.exports = router;
